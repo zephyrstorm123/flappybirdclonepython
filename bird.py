@@ -19,11 +19,13 @@ class Bird(pg.sprite.Sprite):
         self.gravity = 10
         self.flap_speed = 250
         self.anim_counter = 0
+        self.update_on = False
 
     def update(self,dt):
-        self.playAnimation()
-        self.applyGravity(dt)
-        
+        if self.update_on:
+            self.playAnimation()
+            self.applyGravity(dt)
+            self.checkBounds()
 
     def applyGravity(self, dt):
         self.y_velocity += self.gravity * dt
@@ -41,3 +43,11 @@ class Bird(pg.sprite.Sprite):
             self.anim_counter = 0
         
         self.anim_counter += 1
+    
+    def checkBounds(self):
+        #Prevents the bird from going off the screen from the bottom
+        if self.rect.y <= 0 and self.flap_speed == 250:
+            self.rect.y = 0
+            self.flap_speed = 0
+        elif self.rect.y >= 0 and self.flap_speed == 0:
+            self.flap_speed = 250
